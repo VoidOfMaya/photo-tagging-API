@@ -39,3 +39,12 @@ score{
     mapId
     time
 }
+dependencies:
+
+@prisma/adapter-pg
+@prisma/client    
+cors
+dotenv
+express
+express-validator
+pg

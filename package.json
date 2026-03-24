@@ -1,0 +1,29 @@
+{
+  "name": "photo_tagger_api",
+  "version": "1.0.0",
+  "description": "- validates and sanitizes front end input     - checks if target data overlaps with target data from the db         * queries database for, original imgSize and target position         ```js             //Prisma ORM             return prisma.findUnique({                 where: {id: mapId},                 include:{                     targets:{                         where:{targetId: targetId}                     }                 }             })",
+  "homepage": "https://github.com/VoidOfMaya/photo-tagging-API#readme",
+  "bugs": {
+    "url": "https://github.com/VoidOfMaya/photo-tagging-API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VoidOfMaya/photo-tagging-API.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^7.5.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.1",
+    "pg": "^8.20.0"
+  }
+}
