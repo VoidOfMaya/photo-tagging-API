@@ -1,6 +1,6 @@
 # photo-tagging-API
  #### Backend
-    ##### /finish
+    ##### Post/registerRound
     - validates and sanitizes front end input
     - checks if target data overlaps with target data from the db
         * queries database for, original imgSize and target position

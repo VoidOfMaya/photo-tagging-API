@@ -13,26 +13,27 @@ datasource db {
 }
 
 model Map{
-  id        Int @id @default(autoincrement())
-  name      String?
-  pxWidth   Int
-  pxHeight  Int
-  path      String
-  targets   Target[]
-  players   Player[]
+  id          Int @id @default(autoincrement())
+  name        String?
+  pxWidth     Int
+  pxHeight    Int
+  path        String
+  targets     Target[]
+  players     Player[]
 
 }
 model Target{
   targetId  String @id @unique
-  Xpos      Int
-  ypos      Int
-  map       Map @relation(fields: [mapId], references: [id])
-  mapId     Int
+  Xpos        Int
+  ypos        Int
+  map         Map @relation(fields: [mapId], references: [id])
+  mapId       Int
 }
 model Player{
-  id        Int @id @default(autoincrement())
-  name      String @default("annonymous")
-  map       Map @relation(fields: [mapId], references: [id])
-  mapId     Int
-  timeSec   Int
+  id          Int @id @default(autoincrement())
+  name        String @default("annonymous")
+  map         Map @relation(fields: [mapId], references: [id])
+  mapId       Int
+  roundStart  DateTime @default(now())
+  roundEnd    DateTime?
 }
