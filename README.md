@@ -23,23 +23,34 @@
     - sends 200 ok response
 
 ### database 
+-schema:
+```prisma
+model Map{
+  id        Int @id @default(autoincrement())
+  name      String?
+  pxWidth   Int
+  pxHeight  Int
+  path      String
+  targets   Target[]
+  players   Player[]
 
-map{
-    id
-    targets[targetId]
 }
-target{
-    id
-    name
-    Xpos
-    Ypos
+model Target{
+  targetId  String @id @unique
+  Xpos      Int
+  ypos      Int
+  map       Map @relation(fields: [mapId], references: [id])
+  mapId     Int
 }
-score{
-    name
-    mapId
-    time
-}
-dependencies:
+model Player{
+  id        Int @id @default(autoincrement())
+  name      String @default("annonymous")
+  map       Map @relation(fields: [mapId], references: [id])
+  mapId     Int
+  timeSec   Int
+}    
+```
+general dependencies:
 
 @prisma/adapter-pg
 @prisma/client    
