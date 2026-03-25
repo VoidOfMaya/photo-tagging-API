@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { 
-    roundController, 
+    gameStartController,
+    gameEndController, 
     scoreController 
 } from "../controllers/indexController.js";
 import { roundData } from "../validate.js";
@@ -12,7 +13,8 @@ const indexRouter = Router()
 // validate round , on success submit round info stop timer and populate score
 
 indexRouter.get('/',scoreController)
-indexRouter.post('/registerRound',roundData ,roundController)
+indexRouter.post('/',gameStartController)
+indexRouter.put('/',gameEndController)
 
 export{
     indexRouter

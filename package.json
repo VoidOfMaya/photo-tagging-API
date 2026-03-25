@@ -15,7 +15,8 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "test": "jest"
+    "dev":"node app.js",
+    "test": "jest --setupFiles dotenv/config"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",
