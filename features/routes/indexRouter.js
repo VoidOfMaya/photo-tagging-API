@@ -2,8 +2,8 @@ import { Router } from "express";
 import { 
     roundController, 
     scoreController 
-} from "../controllers/indexController";
-import { roundData } from "../validate";
+} from "../controllers/indexController.js";
+import { roundData } from "../validate.js";
 
 const indexRouter = Router()
 //expected functionality:
