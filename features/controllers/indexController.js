@@ -17,7 +17,7 @@ const gameEndController = async(req, res)=>{
 //gets all scors with an endgame time
 //if  score does not have an end time  then delete
 const scoreController = async(req, res)=>{
-
+ res.json({"msg": 'rout reached'})
 }
 
 export{

@@ -34,3 +34,6 @@ app.listen(PORT, (err)=>{
     if(err) throw new err ;
     console.log(`Server running on port: ${PORT}`);
 })
+export{
+  app
+}
