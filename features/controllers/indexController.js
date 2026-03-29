@@ -5,8 +5,12 @@ import {
     mapCoords
 } from "../services/indexServices.js"
 //sets session start
+//expects {playername: 'david', mapId: map.id}
 const gameStartController = async(req, res)=>{
-    
+    const data = req.body;
+    const session = await startGame(data)
+    res.status(201).json(session);
+    //res.json({msg:"post rout accessed"})
 }
 //validate game results // recieves: 
 // {game screen hight&width}

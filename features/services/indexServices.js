@@ -1,23 +1,20 @@
 import {prisma} from '../../lib/prisma.js'
 //start session// should recieve: name and map id session round updates automatically
 const startGame = async(data)=>{
-    let session;
-    if(data.name){
-        session = await prisma.player.create({
+    if(data.playername){
+        return await prisma.player.create({
             data:{
-                name: data.name,
-                map: {where:{id: data.mapId }}
+                name: data.playername,
+                map: {connect:{id: Number(data.mapId) }}
             }
         })        
     }else{
-         session = await prisma.player.create({
+        return await prisma.player.create({
             data:{
-                map:{where:{id: data.mapId}}
+                map:{connect:{id: Number(data.mapId)}}
             }
         })
     }
-    return session
-
 }
 //end session// updates existing query with  end time
 const endGame = async(sessionId)=>{

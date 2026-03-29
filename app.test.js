@@ -72,7 +72,7 @@ test('POST/start round and create new player', async ()=>{
         .post('/')
         .type('form')
         .send({playername: 'david', mapId: map.id})
-    const playerId = res.body.playerId;
+    const playerId = res.body.id
     expect(res.statusCode).toBe(201);
     expect(playerId).toBeDefined();
     const session = await prisma.player.findUnique({
