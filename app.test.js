@@ -14,13 +14,13 @@ beforeEach(async()=>{
     await prisma.target.deleteMany();
     await prisma.map.deleteMany();
     //seed mock data
-    await prisma.map.create({
+    const map = await prisma.map.create({
         data:{name: 'test_map',path: './img',pxHeight: 500,pxWidth: 1000}
     })
     await prisma.target.createMany({
         data:[
-            {targetId: 'waldo',Xpos: 500,ypos:100, mapId: 1},
-            {targetId: 'wanda',Xpos: 800,ypos: 400, mapId: 1}
+            {targetId: 'waldo',Xpos: 500,ypos:100, mapId: map.id},
+            {targetId: 'wanda',Xpos: 800,ypos: 400, mapId: map.id}
         ]
     })
 })
@@ -31,18 +31,20 @@ afterAll(async()=>{
 //expected return:
 //[{playername, mapname,time},...]
 test('GET/ scores', async()=>{
+    //get map info:
     //mock data
     const start = new Date();
     const end = [
         new Date(start.getTime() + 5000), 
         new Date(start.getTime() + 10000),
         new Date(start.getTime() + 23000)]
-
+    
+    const map = await prisma.map.findFirst();
     await prisma.player.createMany({
         data:[
-            {name: 'simon', mapId:1 ,roundEnd: end[0],roundStart: start},
-            {name: 'david', mapId:1 ,roundEnd: end[1],roundStart: start},
-            {mapId:1 ,roundEnd: end[2],roundStart: start},
+            {name: 'simon', mapId:map.id ,roundEnd: end[0],roundStart: start},
+            {name: 'david', mapId:map.id ,roundEnd: end[1],roundStart: start},
+            {mapId: map.id ,roundEnd: end[2],roundStart: start},
         ]
     })
     //running request against mock data
@@ -64,11 +66,12 @@ test('GET/ scores', async()=>{
 //database expected to contain  a player entry with the following
 // {id, mapId, name, round_start}
 test('POST/start round and create new player', async ()=>{
+    const map = await prisma.map.findFirst();
     const res=  await 
         request(app)
         .post('/')
         .type('form')
-        .send({playername: 'david', mapId: 1})
+        .send({playername: 'david', mapId: map.id})
     const playerId = res.body.playerId;
     expect(res.statusCode).toBe(201);
     expect(playerId).toBeDefined();
@@ -92,9 +95,10 @@ test('POST/start round and create new player', async ()=>{
 // {..., round_End}
 test('round end submition',async()=>{
 
-    const end = new Date(start.getTime() + 5000);
+    const map = await prisma.map.findFirst();
+    const end = new Date (Date.now()+ 5000);
     await prisma.player.create({
-        data: {name: 'simon', mapId:1 ,roundEnd: end}
+        data: {name: 'simon', mapId:map.id ,roundEnd: end}
     })
     const res = await request(app)
          .put('/')

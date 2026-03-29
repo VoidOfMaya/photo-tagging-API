@@ -30,7 +30,7 @@ const endGame = async(sessionId)=>{
 }
 //get score// gets player name,session start, session end , map name, 
 const score = async(mapId)=>{
-    const score = await prisma.player.findMany({
+    return await prisma.player.findMany({
         where: {mapId: mapId},
         select:{
             name: true,
@@ -44,7 +44,6 @@ const score = async(mapId)=>{
             }
         }
     })
-    console.log(score);
     //for each score derive round time by subtracting start and end date
 }
 //get map info// gets original map deminsions and targets with thier coords
