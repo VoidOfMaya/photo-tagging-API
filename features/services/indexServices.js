@@ -18,6 +18,8 @@ const startGame = async(data)=>{
 }
 //end session// updates existing query with  end time
 const endGame = async(sessionId)=>{
+    //if all targets are within 50px radius then:
+    //close game session
     await prisma.player.update({
         where:{id : sessionId},
         data:{

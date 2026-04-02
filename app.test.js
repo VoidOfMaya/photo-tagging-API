@@ -103,11 +103,25 @@ test('round end submition',async()=>{
     const res = await request(app)
          .put('/')
          //player id
-         .send({playerId: 1})
-    const playerId = res.body.playerId;
+         .send({
+            playerId: 1,
+            mapId: map.id,
+            screensize:{W:1000, H:500},
+            targets: [
+                {targetId: "waldo", x:865,y:202},
+                {targetId: "wanda", x:705,y:26},
+                {targetId: "odlaw", x:163,y:25},
+                {targetId: "mermaid", x:357,y:374}
+            ], })
+            /*expect: 
+             {targetId: "waldo", x:2214,y:649},
+                {targetId: "wanda", x:1806,y:84},
+                {targetId: "odlaw", x:418,y:79},
+                {targetId: "mermaid", x:913,y:1204}
+            */
+    const playerId = res.body.id;
     expect(playerId)
     .toBeDefined()
-    .toBe(1)
     const session = await prisma.player.findUnique({
         where:{id: playerId},
         select:{

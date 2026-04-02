@@ -16,7 +16,15 @@ const gameStartController = async(req, res)=>{
 // {game screen hight&width}
 // [{targetId, xposition,yposition}...], 
 const gameEndController = async(req, res)=>{
-    
+    /*
+    -for each  target 
+    1- scale target cords to match with the original scale of the img
+    2- check if target name id exists
+    3- check of og target x,y coords match with user targets
+    4- once all targets are found end session 
+    */
+   const mapInfo = await mapCoords(req.body.mapId);
+res.status(200).json({msg: "end game route"})
 }
 //gets all scors with an endgame time
 //if  score does not have an end time  then delete
