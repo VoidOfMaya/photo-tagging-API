@@ -46,24 +46,25 @@ const score = async(mapId)=>{
     //for each score derive round time by subtracting start and end date
 }
 //get map info// gets original map deminsions and targets with thier coords
-const mapCoords = async(mapId)=>{
-    return await prisma.map.findUnique({
-        where:{id : mapId},
-        select:{
-            pxHeight: true,
-            pxWidth: true,
-            targets:{
+const getTargetsAndMap = async(mapId)=>{
+    return await prisma.target.findMany({
+        where:{mapId : Number(mapId)},
+        select:{                    
+            targetId:true,
+            Xpos: true,
+            ypos: true,
+            map:{
                 select:{
-                    targetId:true,
-                    Xpos: true,
-                    ypos: true
+                    pxHeight: true,
+                    pxWidth: true,
+
                 }
             }
         }
     })
 }
 export{
-    mapCoords,
+    getTargetsAndMap,
     startGame,
     endGame,
     score,

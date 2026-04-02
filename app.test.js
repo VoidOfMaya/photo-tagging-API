@@ -94,9 +94,18 @@ test('POST/start round and create new player', async ()=>{
 //database expected to contain  a player entry with the following
 // {..., round_End}
 test('round end submition',async()=>{
-
+    //setting up test mock data
     const map = await prisma.map.findFirst();
-    const end = new Date (Date.now()+ 5000);
+    await prisma.target.deleteMany();
+    await prisma.target.createMany({
+        data:[
+            {targetId: "waldo", Xpos:865, ypos:202, mapId: map.id},
+            {targetId: "wanda", Xpos:705, ypos:26, mapId: map.id},
+            {targetId: "odlaw", Xpos:163, ypos:25, mapId: map.id},
+            {targetId: "mermaid", Xpos:357, ypos:374, mapId: map.id}
+        ]
+    })
+    //creats a pending game session
     await prisma.player.create({
         data: {name: 'simon', mapId:map.id ,roundEnd: end}
     })
@@ -106,20 +115,22 @@ test('round end submition',async()=>{
          .send({
             playerId: 1,
             mapId: map.id,
-            screensize:{W:1000, H:500},
+            screensize:{W:2560, H:1609},
             targets: [
+                {targetId: "waldo", x:2214,y:649},
+                {targetId: "wanda", x:1806,y:84},
+                {targetId: "odlaw", x:418,y:79},
+                {targetId: "mermaid", x:913,y:1204}
+            ], })
+            /*expect conversion: 
                 {targetId: "waldo", x:865,y:202},
                 {targetId: "wanda", x:705,y:26},
                 {targetId: "odlaw", x:163,y:25},
                 {targetId: "mermaid", x:357,y:374}
-            ], })
-            /*expect: 
-             {targetId: "waldo", x:2214,y:649},
-                {targetId: "wanda", x:1806,y:84},
-                {targetId: "odlaw", x:418,y:79},
-                {targetId: "mermaid", x:913,y:1204}
+
+            expected return: end sessino to be defined!
             */
-    const playerId = res.body.id;
+    const playerId = res.body.mapId;
     expect(playerId)
     .toBeDefined()
     const session = await prisma.player.findUnique({
