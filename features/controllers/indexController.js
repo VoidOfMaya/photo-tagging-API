@@ -2,7 +2,8 @@ import {
     score,
     startGame,
     endGame,
-    getTargetsAndMap
+    getTargetsAndMap,
+    getSessionStatus
 } from "../services/indexServices.js"
 //sets session start
 //expects {playername: 'david', mapId: map.id}
@@ -40,9 +41,12 @@ const gameEndController = async(req, res)=>{
         console.log(`matches found: ${Number(hitcounter)}`)
         console.log(`out of : ${Number(targs.length)}`)
         //4- once all targets are found end session     
-        if(hitcounter !== targs.length) throw new Error('one or more invalide targets!')
-            const updtSession = await endGame(playerId);
-            res.status(200).json({status: true, session: updtSession})
+        if(hitcounter !== targs.length) throw new Error('one or more invalide targets!');
+        const sessStatus = await getSessionStatus(Number(playerId));
+        if(sessStatus.roundEnd !== null) throw new Error('Session has already concluded')
+        const updtSession = await endGame(playerId);
+        
+        res.status(200).json({status: true, session: updtSession})
         
     }catch(err){
         res.status(400).json({status: false,ErrMsg: err.message || err})

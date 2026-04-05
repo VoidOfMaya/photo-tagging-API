@@ -21,7 +21,7 @@ const endGame = async(sessionId)=>{
     //if all targets are within 50px radius then:
     //close game session
     return await prisma.player.update({
-        where:{id : Number(sessionId)},
+        where:{id : Number(sessionId), roundEnd: null},
         data:{
             roundEnd: new Date()
         }
@@ -63,10 +63,19 @@ const getTargetsAndMap = async(mapId)=>{
         }
     })
 }
+const getSessionStatus = async(id)=>{
+    return await prisma.player.findUnique({
+        where:{id: id},
+        select:{
+            roundEnd: true
+        }
+    })
+}
 export{
     getTargetsAndMap,
     startGame,
     endGame,
     score,
+    getSessionStatus
 
 }
