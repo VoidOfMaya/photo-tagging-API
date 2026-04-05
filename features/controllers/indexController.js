@@ -16,30 +16,36 @@ const gameStartController = async(req, res)=>{
 // {game screen hight&width}
 // [{targetId, xposition,yposition}...], 
 const gameEndController = async(req, res)=>{
-    const [playerId,mapId,screensize,targets] = req.body;
-    const targs = await getTargetsAndMap(mapId);
-    let hitcounter = 0;
-    const ogMap = targs[0].map;
-    targets.forEach(target => {
-    
-    //1- normlize target cords to match with the original scale of the img
-    const newY = target.y*(ogMap.pxHeight/screensize.H);
-    const newX = target.x*(ogMap.pxWidth/screensize.W);
-    //2- check if target name id exists
-    const match = targs.find(t => t.targetId === target.targetId);
-    if(!match) return;
-    //3-check hight and width within 50px margin
-    const dx = t.Xpos - newX;
-    const dy = t.ypos - newY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    if(distance <= 50) return hitcounter++
-    
-    });
-    //4- once all targets are found end session     
-    if(hitcounter === targs.length){
-        res.status(200)
-    }else{
-        res.status(400)
+    try{
+        const {playerId,mapId,screensize,targets}= req.body;
+        const targs = await getTargetsAndMap(mapId);
+        let hitcounter = 0;
+        const ogMap = targs[0].map;
+        
+        targets.forEach((target, index) => {
+            //1- normlize target cords to match with the original scale of the img
+            const newY = target.y*(ogMap.pxHeight/screensize.H);
+            const newX = target.x*(ogMap.pxWidth/screensize.W);
+            //2- check if target name id exists
+            const match = targs.find(t => t.targetId === target.targetId);
+            if(!match) return;
+            //3-check hight and width within 50px margin
+            const dx = match.Xpos - newX;
+            const dy = match.ypos - newY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if(distance <= 50) return hitcounter = hitcounter + 1;
+        
+        
+        });
+        console.log(`matches found: ${Number(hitcounter)}`)
+        console.log(`out of : ${Number(targs.length)}`)
+        //4- once all targets are found end session     
+        if(hitcounter !== targs.length) throw new Error('one or more invalide targets!')
+        
+            res.status(200).json({status: true})
+        
+    }catch(err){
+        res.status(400).json({status: false,ErrMsg: err})
     }
     /*
     example target:
