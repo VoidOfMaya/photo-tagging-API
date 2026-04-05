@@ -30,7 +30,7 @@ const endGame = async(sessionId)=>{
 //get score// gets player name,session start, session end , map name, 
 const score = async(mapId)=>{
     return await prisma.player.findMany({
-        where: {mapId: mapId},
+        where: {mapId: mapId, roundEnd:{ not: null}},
         select:{
             name: true,
             roundStart: true,
