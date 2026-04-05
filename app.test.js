@@ -5,6 +5,7 @@ import {indexRouter} from './features/routes/indexRouter.js';
 import { prisma } from "./lib/prisma.js";
 //sets up an express server
 const app = express();
+app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use('/', indexRouter);
 //mocks db data
@@ -15,12 +16,12 @@ beforeEach(async()=>{
     await prisma.map.deleteMany();
     //seed mock data
     const map = await prisma.map.create({
-        data:{name: 'test_map',path: './img',pxHeight: 500,pxWidth: 1000}
+        data:{name: 'test_map',path: './img',pxWidth: 2000, pxHeight: 1000}
     })
     await prisma.target.createMany({
         data:[
-            {targetId: 'waldo',Xpos: 500,ypos:100, mapId: map.id},
-            {targetId: 'wanda',Xpos: 800,ypos: 400, mapId: map.id}
+            {targetId: 'waldo',Xpos: 2214,ypos:649, mapId: map.id},
+            {targetId: 'wanda',Xpos: 1806,ypos: 84, mapId: map.id}
         ]
     })
 })
@@ -106,46 +107,44 @@ test('round end submition',async()=>{
         ]
     })
     //creats a pending game session
-    await prisma.player.create({
-        data: {name: 'simon', mapId:map.id ,roundEnd: end}
+    const player = await prisma.player.create({
+        data: {name: 'simon', mapId:map.id}
     })
     const res = await request(app)
          .put('/')
          //player id
          .send({
-            playerId: 1,
+            playerId: player.id,
             mapId: map.id,
-            screensize:{W:2560, H:1609},
-            targets: [
-                {targetId: "waldo", x:2214,y:649},
-                {targetId: "wanda", x:1806,y:84},
-                {targetId: "odlaw", x:418,y:79},
-                {targetId: "mermaid", x:913,y:1204}
-            ], })
-            /*expect conversion: 
-                {targetId: "waldo", x:865,y:202},
-                {targetId: "wanda", x:705,y:26},
-                {targetId: "odlaw", x:163,y:25},
-                {targetId: "mermaid", x:357,y:374}
+            screensize:{W: 2560, H: 1609},
+            //db map: (X)pxWidth: 2000, (Y)pxHeight: 1000
+            targets:[
+        { targetId: "waldo", x: 1107, y: 323 },
+        { targetId: "wanda", x: 902, y: 42 },
+        { targetId: "odlaw", x: 209, y: 40 },
+        { targetId: "mermaid", x: 457, y: 598 }
+    ], })
 
-            expected return: end sessino to be defined!
-            */
-    const playerId = res.body.mapId;
-    expect(playerId)
-    .toBeDefined()
+    const updtSession = res.body.updtSession;
+    const availablTs = await prisma.target.findMany();
+    console.log(availablTs)
+    
     const session = await prisma.player.findUnique({
-        where:{id: playerId},
+        where:{id: Number(player.id)},
         select:{
+            id: true,
             name: true,
             map: {select:{name: true}},
             roundStart: true,
             roundEnd: true
         }
     })
+    console.log(session);
     expect(session).not.toBeNull();
     expect(session.name).toBe('simon');
     expect(session.roundStart).toBeDefined();
     expect(session.roundEnd).toBeDefined();
+    expect(session.roundEnd).not.toBeNull();
 
 })
 // req:PUT// end round test

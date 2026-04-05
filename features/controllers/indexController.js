@@ -41,18 +41,12 @@ const gameEndController = async(req, res)=>{
         console.log(`out of : ${Number(targs.length)}`)
         //4- once all targets are found end session     
         if(hitcounter !== targs.length) throw new Error('one or more invalide targets!')
-        
-            res.status(200).json({status: true})
+            const updtSession = await endGame(playerId);
+            res.status(200).json({status: true, session: updtSession})
         
     }catch(err){
-        res.status(400).json({status: false,ErrMsg: err})
+        res.status(400).json({status: false,ErrMsg: err.message || err})
     }
-    /*
-    example target:
-        {targetId: "waldo", x:865,y:202},
-    expect conversion: 
-        {targetId: "waldo", x:2214,y:649},
-    */
 }
 //gets all scors with an endgame time
 //if  score does not have an end time  then delete
