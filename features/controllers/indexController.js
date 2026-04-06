@@ -1,3 +1,4 @@
+import { matchedData, validationResult } from "express-validator";
 import { 
     score,
     startGame,
@@ -8,9 +9,19 @@ import {
 //sets session start
 //expects {playername: 'david', mapId: map.id}
 const gameStartController = async(req, res)=>{
-    const data = req.body;
-    const session = await startGame(data)
-    res.status(201).json(session);
+    //validating input data
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(401).json({error: errors.array()});
+    const data = matchedData(req)
+    try{
+        const session = await startGame(data)
+        res.status(201).json(session);
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json({error: err.message || 'Internal Server Error'});
+    }
+
     //res.json({msg:"post rout accessed"})
 }
 //validate game results // recieves: 
