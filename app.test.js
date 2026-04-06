@@ -73,9 +73,11 @@ test('POST/start round and create new player', async ()=>{
         .post('/')
         .type('form')
         .send({playername: 'david', mapId: map.id})
+    console.log(map.id)
     const playerId = res.body.id
     expect(res.statusCode).toBe(201);
     expect(playerId).toBeDefined();
+
     const session = await prisma.player.findUnique({
         where:{id: playerId},
         select:{
@@ -127,8 +129,6 @@ test('round end submition',async()=>{
 
     const updtSession = res.body.updtSession;
     const availablTs = await prisma.target.findMany();
-    console.log(availablTs)
-    
     const session = await prisma.player.findUnique({
         where:{id: Number(player.id)},
         select:{
@@ -139,7 +139,6 @@ test('round end submition',async()=>{
             roundEnd: true
         }
     })
-    console.log(session);
     expect(session).not.toBeNull();
     expect(session.name).toBe('simon');
     expect(session.roundStart).toBeDefined();

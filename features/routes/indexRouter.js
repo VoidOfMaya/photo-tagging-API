@@ -12,11 +12,11 @@ const indexRouter = Router()
 // start round and set timer(timer should account for communications delays);
 // validate round , on success submit round info stop timer and populate score
 
-indexRouter.get('/',validateStart,scoreController)
+indexRouter.get('/',scoreController)
 /*returns array of objects=[
 {(playername? name : anon), mapname, (starttime - endtime = time)},
 ]*/
-indexRouter.post('/',gameStartController)
+indexRouter.post('/',validateStart,gameStartController)
 /*req.body: {playername?, mapid} 
 note: start time is set by default on round/game session creation
     returns: player id (this is used to track game session)

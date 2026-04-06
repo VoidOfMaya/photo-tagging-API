@@ -1,6 +1,7 @@
 import {prisma} from '../../lib/prisma.js'
 //start session// should recieve: name and map id session round updates automatically
 const startGame = async(data)=>{
+    if(!data.playername || !data.mapId) throw new Error("missing data!")
     if(data.playername){
         return await prisma.player.create({
             data:{
