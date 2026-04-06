@@ -1,6 +1,8 @@
 import { body } from "express-validator";
 // gamestart {playername: 'david', mapId: map.id}
-
+const validateStart =body('name')
+                    .isAlpha().withMessage('name must contain only letters')
+                    .isLength({max: 10, min: 0}).withMessage('name must contain between 0 - 10 characters')
 /*
 gameend: {
     "playerId": 1,
@@ -17,5 +19,6 @@ gameend: {
 const roundData = []
 
 export{
-    roundData
+    roundData,
+    validateStart
 }

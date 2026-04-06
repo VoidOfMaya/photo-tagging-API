@@ -23,7 +23,7 @@ const gameEndController = async(req, res)=>{
         let hitcounter = 0;
         const ogMap = targs[0].map;
         
-        targets.forEach((target, index) => {
+        targets.forEach((target) => {
             //1- normlize target cords to match with the original scale of the img
             const newY = target.y*(ogMap.pxHeight/screensize.H);
             const newX = target.x*(ogMap.pxWidth/screensize.W);
@@ -38,8 +38,6 @@ const gameEndController = async(req, res)=>{
         
         
         });
-        console.log(`matches found: ${Number(hitcounter)}`)
-        console.log(`out of : ${Number(targs.length)}`)
         //4- once all targets are found end session     
         if(hitcounter !== targs.length) throw new Error('one or more invalide targets!');
         const sessStatus = await getSessionStatus(Number(playerId));

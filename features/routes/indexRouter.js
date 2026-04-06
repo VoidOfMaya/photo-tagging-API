@@ -4,7 +4,7 @@ import {
     gameEndController, 
     scoreController 
 } from "../controllers/indexController.js";
-import { roundData } from "../validate.js";
+import { roundData, validateStart } from "../validate.js";
 
 const indexRouter = Router()
 //expected functionality:
@@ -12,7 +12,7 @@ const indexRouter = Router()
 // start round and set timer(timer should account for communications delays);
 // validate round , on success submit round info stop timer and populate score
 
-indexRouter.get('/',scoreController)
+indexRouter.get('/',validateStart,scoreController)
 /*returns array of objects=[
 {(playername? name : anon), mapname, (starttime - endtime = time)},
 ]*/
