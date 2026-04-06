@@ -74,10 +74,13 @@ test('POST/start round and create new player', async ()=>{
         .type('form')
         .send({playername: 'david', mapId: map.id})
     console.log(map.id)
+    //tests response object
     const playerId = res.body.id
+    console.log(playerId)
     expect(res.statusCode).toBe(201);
     expect(playerId).toBeDefined();
-
+    
+    //tests database info
     const session = await prisma.player.findUnique({
         where:{id: playerId},
         select:{

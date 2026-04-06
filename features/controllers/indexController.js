@@ -2,9 +2,7 @@ import { matchedData, validationResult } from "express-validator";
 import { 
     score,
     startGame,
-    endGame,
-    getTargetsAndMap,
-    getSessionStatus
+    gameLogicService
 } from "../services/indexServices.js"
 //sets session start
 //expects {playername: 'david', mapId: map.id}
@@ -27,33 +25,21 @@ const gameStartController = async(req, res)=>{
 // {game screen hight&width}
 // [{targetId, xposition,yposition}...], 
 const gameEndController = async(req, res)=>{
+    
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({error: errors.array()});
+    const data = matchedData(req)
+    //stitch todether sanetized data with complex data
+    const pardsedData = {
+        playerId: data.playerId,
+        mapId: data.mapId,
+        screensize: req.body.screensize,
+        targets: req.body.targets 
+    }
+
     try{
-        const {playerId,mapId,screensize,targets}= req.body;
-        const targs = await getTargetsAndMap(mapId);
-        let hitcounter = 0;
-        const ogMap = targs[0].map;
-        
-        targets.forEach((target) => {
-            //1- normlize target cords to match with the original scale of the img
-            const newY = target.y*(ogMap.pxHeight/screensize.H);
-            const newX = target.x*(ogMap.pxWidth/screensize.W);
-            //2- check if target name id exists
-            const match = targs.find(t => t.targetId === target.targetId);
-            if(!match) return;
-            //3-check hight and width within 50px margin
-            const dx = match.Xpos - newX;
-            const dy = match.ypos - newY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if(distance <= 50) return hitcounter = hitcounter + 1;
-        
-        
-        });
-        //4- once all targets are found end session     
-        if(hitcounter !== targs.length) throw new Error('one or more invalide targets!');
-        const sessStatus = await getSessionStatus(Number(playerId));
-        if(sessStatus.roundEnd !== null) throw new Error('Session has already concluded')
-        const updtSession = await endGame(playerId);
-        
+        const updtSession = await gameLogicService(pardsedData)   
+        console.log(updtSession);
         res.status(200).json({status: true, session: updtSession})
         
     }catch(err){

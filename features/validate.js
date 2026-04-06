@@ -24,9 +24,13 @@ gameend: {
     ]
 }
 */
-const roundData = []
+const validateEnd =[
+    body('playerId').trim().exists().isInt().withMessage('field required and is int'),
+    body('mapId').trim().exists().isInt().withMessage('field required and is int'),
+
+]
 
 export{
-    roundData,
+    validateEnd,
     validateStart
 }

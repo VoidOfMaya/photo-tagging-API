@@ -4,7 +4,7 @@ import {
     gameEndController, 
     scoreController 
 } from "../controllers/indexController.js";
-import { roundData, validateStart } from "../validate.js";
+import {validateEnd, validateStart } from "../validate.js";
 
 const indexRouter = Router()
 //expected functionality:
@@ -21,7 +21,7 @@ indexRouter.post('/',validateStart,gameStartController)
 note: start time is set by default on round/game session creation
     returns: player id (this is used to track game session)
 */
-indexRouter.put('/',gameEndController)
+indexRouter.put('/', validateEnd,gameEndController)
 /*req.body: {player.id}
     returns 200ok
 note: endgame logic is handled by services
